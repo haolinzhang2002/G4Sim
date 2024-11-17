@@ -3,7 +3,6 @@
 #include "RunAction.hh"
 #include "EventAction.hh"
 #include "SteppingAction.hh"
-#include "StackingAction.hh"
 #include <fstream>
 
 void ActionInitialization::BuildForMaster() const
@@ -18,9 +17,6 @@ void ActionInitialization::Build() const
   
   auto runAction = new RunAction;
   SetUserAction(runAction);
-
-  auto stackingAction = new StackingAction;
-  SetUserAction(stackingAction);
 
   auto eventAction = new EventAction();
   SetUserAction(eventAction);
