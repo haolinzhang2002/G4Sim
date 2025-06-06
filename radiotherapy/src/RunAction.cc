@@ -6,8 +6,41 @@
 #include "G4SystemOfUnits.hh"
 #include "G4UnitsTable.hh"
 
-RunAction::RunAction() {}
+RunAction::RunAction() {
+  auto analysisManager = G4AnalysisManager::Instance();
+  analysisManager->SetVerboseLevel(1);
+  analysisManager->SetNtupleMerging(true);
 
-void RunAction::BeginOfRunAction(const G4Run*) {}
+  // Creating ntuple
+  //
+  analysisManager->CreateNtuple("Ntuple1", "RadiotherapyROOT");
 
-void RunAction::EndOfRunAction(const G4Run*) {}
+  // Energy and ProcessName
+  analysisManager->CreateNtupleDColumn("edepStep");  // Column0
+
+  // Position
+  analysisManager->CreateNtupleDColumn("Position_X");  // Column1
+  analysisManager->CreateNtupleDColumn("Position_Y");  // Column2
+  analysisManager->CreateNtupleDColumn("Position_Z");  // Column3
+
+  // Volume
+  analysisManager->CreateNtupleSColumn("Volume");  // Column4
+
+  analysisManager->FinishNtuple();
+}
+
+void RunAction::BeginOfRunAction(const G4Run*) {
+  // Get analysis manager
+  auto analysisManager = G4AnalysisManager::Instance();
+  G4String fileName = "radiotherapy_output.root";
+  analysisManager->OpenFile(fileName);
+  G4cout << "Using " << analysisManager->GetType() << G4endl;
+}
+
+void RunAction::EndOfRunAction(const G4Run*) {
+  auto analysisManager = G4AnalysisManager::Instance();
+  analysisManager->Write();
+  analysisManager->CloseFile();
+
+  G4cout << "Run finished. Data saved to radiotherapy_output.root" << G4endl;
+}

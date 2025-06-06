@@ -15,6 +15,7 @@
 #include "G4SolidStore.hh"
 #include "G4Sphere.hh"
 #include "G4StateManager.hh"
+#include "G4SubtractionSolid.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4Tubs.hh"
 #include "G4UserLimits.hh"
@@ -54,20 +55,14 @@ G4VPhysicalVolume* DetectorConstruction::ConstructDetector() {
   fSolidHead =
       new G4Sphere("Head", 0 * mm, 90 * mm, 0, 360 * deg, 0, 180 * deg);
   fLogicHead = new G4LogicalVolume(fSolidHead, fBodyMaterial, "Head");
-  fPhysiHead = new G4PVPlacement(0, G4ThreeVector(0, -80 * mm, 430 * mm),
+  fPhysiHead = new G4PVPlacement(0, G4ThreeVector(0, -80 * mm, 420 * mm),
                                  fLogicHead, "Head", fLogicWorld, false, 0);
 
   // Neck
   fSolidNeck = new G4Tubs("Neck", 0., 50 * mm, 45 * mm, 0. * deg, 360. * deg);
   fLogicNeck = new G4LogicalVolume(fSolidNeck, fBodyMaterial, "Neck");
-  fPhysiNeck = new G4PVPlacement(0, G4ThreeVector(0, 0, -135 * mm), fLogicNeck,
-                                 "Neck", fLogicHead, false, 0);
-
-  // Body
-  fSolidBody = new G4Box("Body", 60 * mm, 130 * mm, 250 * mm);
-  fLogicBody = new G4LogicalVolume(fSolidBody, fBodyMaterial, "Body");
-  fPhysiBody = new G4PVPlacement(0, G4ThreeVector(0, -80 * mm, -0), fLogicBody,
-                                 "Body", fLogicWorld, false, 0);
+  fPhysiNeck = new G4PVPlacement(0, G4ThreeVector(0, -80 * mm, 295 * mm),
+                                 fLogicNeck, "Neck", fLogicWorld, false, 0);
 
   // Leg
   fSolidLeftLeg =
@@ -85,10 +80,20 @@ G4VPhysicalVolume* DetectorConstruction::ConstructDetector() {
                         fLogicRightLeg, "RightLeg", fLogicWorld, false, 0);
 
   // Tumor
-  fSolidTumor = new G4Ellipsoid("TumorC", 1 * cm, 0.5 * cm, 1.5 * cm);
+  fSolidTumor = new G4Ellipsoid("Tumor", 2 * cm, 1 * cm, 3 * cm);
   fLogicTumor = new G4LogicalVolume(fSolidTumor, fTumorMaterial, "Tumor");
   fPhysiTumor = new G4PVPlacement(0, G4ThreeVector(0, 0, 0), fLogicTumor,
-                                  "Tumor", fLogicBody, false, 0);
+                                  "Tumor", fLogicWorld, false, 0);
+
+  // Body
+  fSolidBody = new G4Box("Body", 60 * mm, 130 * mm, 250 * mm);
+  G4ThreeVector transition(0, 80 * mm, 0);
+  G4SubtractionSolid* fSolidBody_subtraction = new G4SubtractionSolid(
+      "SolidBody", fSolidBody, fSolidTumor, 0, transition);
+  fLogicBody =
+      new G4LogicalVolume(fSolidBody_subtraction, fBodyMaterial, "Body");
+  fPhysiBody = new G4PVPlacement(0, G4ThreeVector(0, -80 * mm, -0), fLogicBody,
+                                 "Body", fLogicWorld, false, 0);
 
   return fPhysiWorld;
 }

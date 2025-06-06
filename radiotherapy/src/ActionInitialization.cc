@@ -18,7 +18,7 @@ void ActionInitialization::Build() const {
   auto runAction = new RunAction;
   SetUserAction(runAction);
 
-  auto eventAction = new EventAction();
+  auto eventAction = new EventAction(runAction);
   SetUserAction(eventAction);
 
   auto stepAction = new SteppingAction(eventAction);

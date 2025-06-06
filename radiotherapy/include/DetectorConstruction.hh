@@ -2,6 +2,7 @@
 #define DetectorConstruction_h 1
 
 #include "CLHEP/Units/SystemOfUnits.h"
+#include "G4SubtractionSolid.hh"
 #include "G4VUserDetectorConstruction.hh"
 #include "globals.hh"
 
@@ -56,6 +57,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction {
   G4VPhysicalVolume* fPhysiTumor = nullptr;
 
   // Body
+  G4SubtractionSolid* fSolidBody_substraction;
   G4Box* fSolidBody = nullptr;
   G4LogicalVolume* fLogicBody = nullptr;
   G4VPhysicalVolume* fPhysiBody = nullptr;
