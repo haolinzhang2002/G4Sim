@@ -18,9 +18,7 @@ int main(int argc, char** argv) {
 
   G4SteppingVerbose::UseBestUnit(4);
 
-  auto* runManager =
-      G4RunManagerFactory::CreateRunManager(G4RunManagerType::Default);
-
+  auto* runManager = new G4RunManager;
   runManager->SetUserInitialization(new DetectorConstruction());
 
   // G4VModularPhysicsList* physicsList = new QGSP_BERT;

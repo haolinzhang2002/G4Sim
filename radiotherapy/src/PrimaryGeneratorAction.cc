@@ -9,11 +9,12 @@
 PrimaryGeneratorAction::PrimaryGeneratorAction() {
   fParticleGun = new G4ParticleGun(1);
   G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
+  // G4ParticleDefinition* particle = particleTable->FindParticle("proton");
   G4ParticleDefinition* particle = particleTable->FindParticle("neutron");
   // G4ParticleDefinition* particle = particleTable->FindParticle("gamma");
   fParticleGun->SetParticleDefinition(particle);
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(-1, 0, 0));
-  fParticleGun->SetParticleEnergy(90 * MeV);
+  fParticleGun->SetParticleEnergy(0.5 * eV);
 }
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction() { delete fParticleGun; }

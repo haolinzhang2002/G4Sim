@@ -29,7 +29,6 @@ DetectorConstruction::DetectorConstruction() {
 DetectorConstruction::~DetectorConstruction() {}
 
 void DetectorConstruction::DefineMaterials() {
-  // G4-NIST materials data base
   G4NistManager* man = G4NistManager::Instance();
   fDefaultMaterial = man->FindOrBuildMaterial("G4_AIR");
   fWorldMaterial = man->FindOrBuildMaterial("G4_AIR");
@@ -79,11 +78,30 @@ G4VPhysicalVolume* DetectorConstruction::ConstructDetector() {
       new G4PVPlacement(0, G4ThreeVector(0, -155 * mm, -66 * cm),
                         fLogicRightLeg, "RightLeg", fLogicWorld, false, 0);
 
+  G4Isotope* isoB10 = new G4Isotope("B10", 5, 10);
+  G4Element* B10 = new G4Element("Boron10", "B10", 1);
+  B10->AddIsotope(isoB10, 100. * perCent);
+
+  G4Element* H = new G4Element("Hydrogen", "H", 1, 1.01 * g / mole);
+  G4Element* C = new G4Element("Carbon", "C", 6, 12.01 * g / mole);
+  G4Element* O = new G4Element("Oxygen", "O", 8, 16.00 * g / mole);
+  G4Element* N = new G4Element("Nitrogen", "N", 7, 14.01 * g / mole);
+  G4Element* P = new G4Element("Phosphorus", "P", 15, 30.97 * g / mole);
+
+  G4Material* fCancerMaterial =
+      new G4Material("CancerTissue", 1.07 * g / cm3, 6);
+  fCancerMaterial->AddElement(H, 0.08);
+  fCancerMaterial->AddElement(C, 0.1);
+  fCancerMaterial->AddElement(O, 0.49);
+  fCancerMaterial->AddElement(N, 0.02);
+  fCancerMaterial->AddElement(P, 0.01);
+  fCancerMaterial->AddElement(B10, 0.3);
+
   // Tumor
   fSolidTumor = new G4Ellipsoid("Tumor", 2 * cm, 1 * cm, 3 * cm);
-  fLogicTumor = new G4LogicalVolume(fSolidTumor, fTumorMaterial, "Tumor");
+  fLogicTumor = new G4LogicalVolume(fSolidTumor, fCancerMaterial, "Tumor");
   fPhysiTumor = new G4PVPlacement(0, G4ThreeVector(0, 0, 0), fLogicTumor,
-                                  "Tumor", fLogicWorld, false, 0);
+                                  "Tumor", fLogicWorld, true, 0);
 
   // Body
   fSolidBody = new G4Box("Body", 60 * mm, 130 * mm, 250 * mm);
@@ -93,7 +111,8 @@ G4VPhysicalVolume* DetectorConstruction::ConstructDetector() {
   fLogicBody =
       new G4LogicalVolume(fSolidBody_subtraction, fBodyMaterial, "Body");
   fPhysiBody = new G4PVPlacement(0, G4ThreeVector(0, -80 * mm, -0), fLogicBody,
-                                 "Body", fLogicWorld, false, 0);
+                                 "Body", fLogicWorld, true, 0);
 
+  fScoringVolume = fLogicTumor;
   return fPhysiWorld;
 }

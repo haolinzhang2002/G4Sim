@@ -1,20 +1,18 @@
 #ifndef PHYLSICSIST_H
 #define PHYSICSLIST_H 1
 
-#include "globals.hh"
 #include "G4VModularPhysicsList.hh"
+#include "globals.hh"
 
-class PhysicsList : public G4VModularPhysicsList
-{
-public:
-
+class PhysicsList : public G4VModularPhysicsList {
+ public:
   PhysicsList();
 
-  ~PhysicsList()=default;
+  ~PhysicsList() = default;
 
   // copy constructor and hide assignment operator
-  PhysicsList(const PhysicsList &)=delete;
-  PhysicsList & operator=(const PhysicsList &right)=delete;
+  PhysicsList(const PhysicsList &) = delete;
+  PhysicsList &operator=(const PhysicsList &right) = delete;
 
   void SetCuts();
 };

@@ -1,10 +1,11 @@
 #ifndef EventAction_h
-#define B1EventAction_h 1
+#define EventAction_h 1
 
 #include "G4UserEventAction.hh"
 #include "globals.hh"
 
 class RunAction;
+class SteppingAction;
 
 class EventAction : public G4UserEventAction {
  public:
@@ -13,7 +14,6 @@ class EventAction : public G4UserEventAction {
 
   void BeginOfEventAction(const G4Event* event) override;
   void EndOfEventAction(const G4Event* event) override;
-
   void AddEdep(G4double edep) { fEdep += edep; }
 
  private:

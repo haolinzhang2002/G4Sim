@@ -22,8 +22,11 @@ class DetectorConstruction : public G4VUserDetectorConstruction {
   ~DetectorConstruction() override;
 
   G4VPhysicalVolume* Construct() override;
+  G4LogicalVolume* GetScoringVolume() const { return fScoringVolume; }
 
-  // void SetShapeMaterial(const G4String&);
+ protected:
+  G4LogicalVolume* fScoringVolume = nullptr;
+
  private:
   // Detector
   G4VPhysicalVolume* ConstructDetector();
@@ -35,6 +38,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction {
   G4Material* fShapeMaterial = nullptr;
   G4Material* fBodyMaterial = nullptr;
   G4Material* fTumorMaterial = nullptr;
+  G4Material* fCancerMaterial = nullptr;
 
   // World
   G4Box* fSolidWorld = nullptr;

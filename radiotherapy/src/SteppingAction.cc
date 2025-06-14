@@ -2,6 +2,7 @@
 
 #include <iomanip>
 
+#include "DetectorConstruction.hh"
 #include "EventAction.hh"
 #include "G4AnalysisManager.hh"
 #include "G4Event.hh"
@@ -16,6 +17,12 @@ SteppingAction::SteppingAction(EventAction* eventAction)
     : fEventAction(eventAction) {}
 
 void SteppingAction::UserSteppingAction(const G4Step* step) {
+  if (!fScoringVolume) {
+    const auto detConstruction = static_cast<const DetectorConstruction*>(
+        G4RunManager::GetRunManager()->GetUserDetectorConstruction());
+    fScoringVolume = detConstruction->GetScoringVolume();
+  }
+
   auto analysisManager = G4AnalysisManager::Instance();
 
   G4Track* track = step->GetTrack();
@@ -32,19 +39,17 @@ void SteppingAction::UserSteppingAction(const G4Step* step) {
                                 ->GetLogicalVolume();
 
   // collect energy deposited in this step
+  // if (volume != fScoringVolume) return;
   G4double edepStep = step->GetTotalEnergyDeposit();
-  fEventAction->AddEdep(edepStep);
-
-  G4String volume_name = volume->GetName();
-
-  if (volume->GetName() != "World")
-  // if (volume->GetName()=="Tumor")
-  {
+  if (volume->GetName() != "World") {
     analysisManager->FillNtupleDColumn(0, 0, edepStep);
     analysisManager->FillNtupleDColumn(0, 1, pos_x);
     analysisManager->FillNtupleDColumn(0, 2, pos_y);
     analysisManager->FillNtupleDColumn(0, 3, pos_z);
-    analysisManager->FillNtupleSColumn(0, 4, volume_name);
     analysisManager->AddNtupleRow();
+  }
+
+  if (volume == fScoringVolume) {
+    fEventAction->AddEdep(edepStep);
   }
 }
