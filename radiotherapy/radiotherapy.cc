@@ -5,8 +5,9 @@
 #include "G4UIExecutive.hh"
 #include "G4UImanager.hh"
 #include "G4VisExecutive.hh"
-#include "QBBC.hh"
 #include "QGSP_BERT.hh"
+#include "QGSP_BERT_HP.hh"
+#include "PhysicsList.hh"
 #include "Randomize.hh"
 
 int main(int argc, char** argv) {
@@ -22,9 +23,10 @@ int main(int argc, char** argv) {
 
   runManager->SetUserInitialization(new DetectorConstruction());
 
-  G4VModularPhysicsList* physicsList = new QGSP_BERT;
-  // G4VModularPhysicsList* physicsList = new QBBC;
-  physicsList->SetVerboseLevel(1);
+  // G4VModularPhysicsList* physicsList = new QGSP_BERT;
+  G4VModularPhysicsList* physicsList = new QGSP_BERT_HP;
+	// G4VModularPhysicsList  physicsList = new PhysicsList;
+	physicsList->SetVerboseLevel(1);
   runManager->SetUserInitialization(physicsList);
 
   runManager->SetUserInitialization(new ActionInitialization());
