@@ -37,17 +37,12 @@ target_link_libraries(G4Ex ${Geant4_LIBRARIES})
 
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we
-# build B1. This is so that we can run the executable directly because it
+# build G4Ex. This is so that we can run the executable directly because it
 # relies on these scripts being in the current working directory.
 #
 set(G4Ex_SCRIPTS
-  G4Ex.in
-  G4Ex.out
   init_vis.mac
-  run1.mac
-  run2.mac
   vis.mac
-  tsg_offscreen.mac
   )
 
 foreach(_script ${G4Ex_SCRIPTS})

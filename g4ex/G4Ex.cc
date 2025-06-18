@@ -4,7 +4,7 @@
 #include "G4RunManagerFactory.hh"
 #include "G4SteppingVerbose.hh"
 #include "G4UImanager.hh"
-#include "QBBC.hh"
+#include "PhysicsList.hh"
 
 #include "G4VisExecutive.hh"
 #include "G4UIExecutive.hh"
@@ -18,11 +18,11 @@ int main(int argc,char** argv)
 
   G4SteppingVerbose::UseBestUnit(4);
 
-  auto* runManager = G4RunManagerFactory::CreateRunManager(G4RunManagerType::Default);
-
+	G4RunManager* runManager = new G4RunManager; // Single Thread
+  //G4RunManager* runManager = G4RunManagerFactory::CreateRunManager(G4RunManagerType::MT); // Multi Thread
   runManager->SetUserInitialization(new DetectorConstruction());
   
-  G4VModularPhysicsList* physicsList = new QBBC;
+  G4VModularPhysicsList* physicsList = new PhysicsList;
   physicsList->SetVerboseLevel(1);
   runManager->SetUserInitialization(physicsList);
 
