@@ -7,7 +7,6 @@
 #include "G4RadioactiveDecayPhysics.hh"
 #include "G4SystemOfUnits.hh"
 
-// Constructor: Register all required physics modules
 PhysicsList::PhysicsList() : G4VModularPhysicsList() {
   // Set default tracking cut for all particles (1 mm range)
   SetDefaultCutValue(1.0 * mm);
